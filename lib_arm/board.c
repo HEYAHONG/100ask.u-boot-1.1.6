@@ -178,7 +178,7 @@ static int display_dram_config (void)
 }
 
 #ifndef CFG_NO_FLASH
-static void display_flash_config (ulong size)
+void display_flash_config (ulong size)
 {
 	puts ("Flash: ");
 	print_size (size, "\n");
@@ -360,10 +360,15 @@ void start_armboot (void)
 	misc_init_r ();
 #endif
 
-	/* enable exceptions */
-	enable_interrupts ();
+	Port_Init();
+	if (!PreLoadedONRAM) {
+		/* enable exceptions */
+		enable_interrupts ();
+	    /* add by www.100ask.net */
+	    usb_init();
+	}
 
-	/* Perform network card initialisation if necessary */
+    /* Perform network card initialisation if necessary */
 #ifdef CONFIG_DRIVER_CS8900
 	cs8900_get_enetaddr (gd->bd->bi_enetaddr);
 #endif
